@@ -1,0 +1,6 @@
+{
+  "name": "سوق المتاجر",
+  "description": "تطبيق سوق المتاجر العربي لاستعراض المتاجر المحلية والمنتجات والطلب عبر واتساب وإدارة الاشتراكات والتقارير.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

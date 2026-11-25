@@ -1,0 +1,209 @@
+{
+  "entities": {
+    "Store": {
+      "title": "Store",
+      "description": "Registered marketplace store with storefront metadata, spotlight flag, and subscription summary.",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string", "description": "Firebase Auth UID of store owner" },
+        "ownerName": { "type": "string", "description": "Store owner full name" },
+        "name": { "type": "string", "description": "Store display name as entered by owner" },
+        "description": { "type": "string", "description": "Store description" },
+        "address": { "type": "string", "description": "Street address" },
+        "city": { "type": "string", "description": "City name in Arabic" },
+        "category": { "type": "string", "description": "Primary store category in Arabic" },
+        "logoUrl": { "type": "string", "description": "Store logo URL or compact data URI" },
+        "whatsappPhone": { "type": "string", "description": "Public storefront WhatsApp and phone number" },
+        "active": { "type": "boolean", "description": "Whether store is visible to marketplace visitors" },
+        "featured": { "type": "boolean", "description": "Spotlight featured store flag" },
+        "spotlightFee": { "type": "number", "description": "Extra fee for spotlight placement" },
+        "ratingAvg": { "type": "number", "description": "Average visitor rating 0-5" },
+        "ratingCount": { "type": "integer", "description": "Total number of visitor reviews" },
+        "viewsCount": { "type": "integer", "description": "Total storefront view counter" },
+        "productsCount": { "type": "integer", "description": "Cached count of active products" },
+        "planName": { "type": "string", "description": "Active subscription plan name" },
+        "subscriptionStatus": { "type": "string", "enum": ["active", "paused", "expired"], "description": "Current subscription status" },
+        "subscriptionEndMillis": { "type": "integer", "description": "Subscription end epoch millis" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update" }
+      },
+      "required": ["ownerId", "ownerName", "name", "description", "address", "city", "category", "logoUrl", "whatsappPhone", "active", "featured", "spotlightFee", "ratingAvg", "ratingCount", "viewsCount", "productsCount", "planName", "subscriptionStatus", "subscriptionEndMillis", "createdAt", "updatedAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Product listed inside a store.",
+      "type": "object",
+      "properties": {
+        "storeId": { "type": "string", "description": "Parent store document ID" },
+        "ownerId": { "type": "string", "description": "Denormalized store owner UID" },
+        "name": { "type": "string", "description": "Product title" },
+        "description": { "type": "string", "description": "Product details" },
+        "price": { "type": "number", "description": "Product price" },
+        "imageUrl": { "type": "string", "description": "Product image URL or compact data URI" },
+        "active": { "type": "boolean", "description": "Whether product is active for purchase" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update" }
+      },
+      "required": ["storeId", "ownerId", "name", "description", "price", "imageUrl", "active", "createdAt", "updatedAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer WhatsApp order record with PII protected to customer, store owner, and admin.",
+      "type": "object",
+      "properties": {
+        "storeId": { "type": "string", "description": "Target store ID" },
+        "storeName": { "type": "string", "description": "Target store name" },
+        "storeOwnerId": { "type": "string", "description": "Denormalized store owner UID" },
+        "customerId": { "type": "string", "description": "Customer Firebase UID" },
+        "customerName": { "type": "string", "description": "Customer name" },
+        "customerPhone": { "type": "string", "description": "Customer phone number" },
+        "customerAddress": { "type": "string", "description": "Customer delivery address" },
+        "productId": { "type": "string", "description": "Ordered product ID" },
+        "productName": { "type": "string", "description": "Ordered product name" },
+        "unitPrice": { "type": "number", "description": "Product unit price" },
+        "quantity": { "type": "integer", "description": "Order quantity" },
+        "couponCode": { "type": "string", "description": "Optional applied coupon code" },
+        "discountPercent": { "type": "integer", "description": "Discount percentage applied" },
+        "totalPrice": { "type": "number", "description": "Final total price" },
+        "status": { "type": "string", "enum": ["sent_whatsapp", "confirmed", "completed"], "description": "Order status" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation" }
+      },
+      "required": ["storeId", "storeName", "storeOwnerId", "customerId", "customerName", "customerPhone", "customerAddress", "productId", "productName", "unitPrice", "quantity", "discountPercent", "totalPrice", "status", "createdAt"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Visitor star rating and comment for a store.",
+      "type": "object",
+      "properties": {
+        "storeId": { "type": "string", "description": "Target store ID" },
+        "userId": { "type": "string", "description": "Reviewer UID" },
+        "userName": { "type": "string", "description": "Reviewer display name" },
+        "rating": { "type": "integer", "description": "Rating from 1 to 5" },
+        "comment": { "type": "string", "description": "Review comment" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation" }
+      },
+      "required": ["storeId", "userId", "userName", "rating", "comment", "createdAt"]
+    },
+    "Subscription": {
+      "title": "Subscription",
+      "description": "Admin-managed subscription plan for a store.",
+      "type": "object",
+      "properties": {
+        "storeId": { "type": "string", "description": "Target store ID" },
+        "storeName": { "type": "string", "description": "Target store name" },
+        "ownerId": { "type": "string", "description": "Store owner UID" },
+        "plan": { "type": "string", "enum": ["trial_30", "monthly", "yearly"], "description": "Plan identifier" },
+        "price": { "type": "number", "description": "Subscription price" },
+        "status": { "type": "string", "enum": ["active", "paused", "expired"], "description": "Subscription status" },
+        "startDateMillis": { "type": "integer", "description": "Subscription start timestamp in epoch millis" },
+        "endDateMillis": { "type": "integer", "description": "Subscription end timestamp in epoch millis" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update" }
+      },
+      "required": ["storeId", "storeName", "ownerId", "plan", "price", "status", "startDateMillis", "endDateMillis", "createdAt", "updatedAt"]
+    },
+    "Coupon": {
+      "title": "Coupon",
+      "description": "Store-specific discount coupon code.",
+      "type": "object",
+      "properties": {
+        "storeId": { "type": "string", "description": "Target store ID" },
+        "ownerId": { "type": "string", "description": "Store owner UID" },
+        "code": { "type": "string", "description": "Uppercase coupon code" },
+        "discountPercent": { "type": "integer", "description": "Discount percent 1..90" },
+        "expiryMillis": { "type": "integer", "description": "Coupon expiration epoch millis" },
+        "active": { "type": "boolean", "description": "Whether coupon is active" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation" }
+      },
+      "required": ["storeId", "ownerId", "code", "discountPercent", "expiryMillis", "active", "createdAt"]
+    },
+    "JoinRequest": {
+      "title": "JoinRequest",
+      "description": "Store onboarding request awaiting admin approval.",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string", "description": "Applicant UID" },
+        "ownerEmail": { "type": "string", "description": "Applicant email" },
+        "storeName": { "type": "string", "description": "Proposed store name" },
+        "ownerName": { "type": "string", "description": "Applicant full name" },
+        "phone": { "type": "string", "description": "Business phone/WhatsApp number" },
+        "city": { "type": "string", "description": "City in Arabic" },
+        "category": { "type": "string", "description": "Category in Arabic" },
+        "address": { "type": "string", "description": "Store street address" },
+        "description": { "type": "string", "description": "Store description" },
+        "logoUrl": { "type": "string", "description": "Logo URL or compact data URI" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"], "description": "Approval status" },
+        "rejectionReason": { "type": "string", "description": "Optional reason when rejected by admin" },
+        "approvedStoreId": { "type": "string", "description": "Created store ID once approved" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update" }
+      },
+      "required": ["ownerId", "ownerEmail", "storeName", "ownerName", "phone", "city", "category", "address", "description", "logoUrl", "status", "createdAt", "updatedAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Marketplace category managed by admin.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Arabic category name" },
+        "sortOrder": { "type": "integer", "description": "Display ordering index" },
+        "active": { "type": "boolean", "description": "Whether category is active" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation" }
+      },
+      "required": ["name", "sortOrder", "active", "createdAt"]
+    },
+    "FavoriteStore": {
+      "title": "FavoriteStore",
+      "description": "Store saved by a user in their personal favorites list.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner Firebase Auth UID" },
+        "storeId": { "type": "string", "description": "Saved store ID" },
+        "storeName": { "type": "string", "description": "Saved store name" },
+        "storeCategory": { "type": "string", "description": "Saved store category" },
+        "storeCity": { "type": "string", "description": "Saved store city" },
+        "storeLogoUrl": { "type": "string", "description": "Saved store logo URL or compact data URI" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation" }
+      },
+      "required": ["userId", "storeId", "storeName", "storeCategory", "storeCity", "storeLogoUrl", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/stores/{storeId}": {
+      "schema": { "$ref": "#/entities/Store" },
+      "description": "Approved stores in the marketplace"
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Products belonging to stores"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Orders placed via WhatsApp checkout"
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/Review" },
+      "description": "Visitor reviews and ratings for stores"
+    },
+    "/subscriptions/{subscriptionId}": {
+      "schema": { "$ref": "#/entities/Subscription" },
+      "description": "Store subscription records managed by admin"
+    },
+    "/coupons/{couponId}": {
+      "schema": { "$ref": "#/entities/Coupon" },
+      "description": "Store discount coupon codes"
+    },
+    "/joinRequests/{requestId}": {
+      "schema": { "$ref": "#/entities/JoinRequest" },
+      "description": "Store join requests pending admin approval"
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Marketplace categories managed by admin"
+    },
+    "/users/{userId}/favorites/{storeId}": {
+      "schema": { "$ref": "#/entities/FavoriteStore" },
+      "description": "Private per-user list of favorite stores"
+    }
+  }
+}

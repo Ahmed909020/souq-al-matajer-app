@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">سوق المتاجر</string>
+    <string name="app_tagline">السوق العربي الشامل للمتاجر المحلية</string>
+    <string name="sign_in_google">تسجيل الدخول عبر Google</string>
+    <string name="sign_out">تسجيل الخروج</string>
+    <string name="search_hint">ابحث باسم المتجر أو المنتج...</string>
+    <string name="all_categories">الكل</string>
+    <string name="all_cities">جميع المدن</string>
+    <string name="featured_badge">متجر مميز</string>
+    <string name="order_now">اطلب الآن</string>
+    <string name="renew_contact_admin">للتجديد تواصل مع الإدارة</string>
+</resources>
